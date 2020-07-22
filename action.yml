@@ -1,0 +1,37 @@
+# action.yml
+name: 'Hugo Action'
+description: 'Flysoloing Hugo Action'
+author: 'flysoloing'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+inputs:
+  hugo-version:
+    description: 'hugo version, default is the latest'
+    required: false
+    default: 'latest'
+  theme:
+    description: 'hugo theme github repository, default is hugo-theme-even'
+    required: false
+    default: 'https://github.com/olOwOlo/hugo-theme-even'
+  source:
+    description: 'github repository'
+    required: true
+  target:
+    description: 'github user or organization page, <USERNAME>.github.io'
+    required: true
+  baseUrl:
+    description: ''
+    required: false
+  title:
+    description: 'site title'
+    required: false
+    default: 'XXX'
+#outputs:
+#  time:
+#    description: 'The time we greeted you'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.theme }}
