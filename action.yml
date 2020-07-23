@@ -34,4 +34,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.theme }}
+    - ${{ inputs.hugo-version }}
