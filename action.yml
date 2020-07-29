@@ -6,22 +6,25 @@ branding:
   icon: 'upload-cloud'
   color: 'blue'
 inputs:
-  hugo-version:
+  hugo_version:
     description: 'hugo version, default is the latest'
     required: false
     default: 'latest'
-  theme:
+  theme_repo_url:
     description: 'hugo theme github repository, default is hugo-theme-even'
     required: false
     default: 'https://github.com/olOwOlo/hugo-theme-even'
-  source:
-    description: 'github repository'
+  source_repo_url:
+    description: 'github article repository'
     required: true
-  target:
+  target_repo_url:
     description: 'github user or organization page, <USERNAME>.github.io'
     required: true
-  baseUrl:
-    description: ''
+  config_file_url:
+    description: 'hugo config file address'
+    required: false
+  base_url:
+    description: 'site address'
     required: false
   title:
     description: 'site title'
@@ -34,4 +37,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.hugo-version }}
+    - ${{ inputs.hugo_version }}
