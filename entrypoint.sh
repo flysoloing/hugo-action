@@ -52,21 +52,24 @@ hugo new site $site_dir
 
 #将文章目录中的md文档都移动到$site_dir中的，具体以实际文章分组为准
 cd $workspace_path/$source_dir
+pwd
 ls -al
 cp -r *.md $workspace_path/$site_dir/content
 
 #进行hugo部署前的配置
 cd $workspace_path/$site_dir
+pwd
 ls -al
 
 #设置config.toml
 if [ -z "$config_file_url" ]; then
     echo "config file url is none, use basic config params"
     #替换config.toml中对应的几个字段，baseURL
-    sed -i '/baseURL/ c baseURL = \"$base_url\"' config.toml
+    sed -i '/baseURL/ c baseURL = \"`$base_url`\"' config.toml
     sed -i '/languageCode/ c languageCode = \"$language_code\"' config.toml
     sed -i '/title/ c title = \"$title\"' config.toml
-    sed -i '/theme/ c theme = \"$theme\"' config.toml
+    #sed -i '/theme/ c theme = \"$theme\"' config.toml
+	echo "theme = \"`$theme`\"" >> config.toml
 else
     echo "replace default config.toml"
     wget $config_file_url -O config.toml
@@ -79,6 +82,7 @@ if [ -z "$theme_repo_url" ]; then
     echo "theme repo url is none, use default theme"
 fi
 git clone $theme_repo_url
+pwd
 ls -al
 
 #为每个md文件增加头部信息，如title，
@@ -86,10 +90,12 @@ cd $workspace_path/$site_dir/content
 
 #以上设置完毕，开始hugo部署
 cd $workspace_path/$site_dir
+pwd
 ls -al
 hugo -D
 
 cd $workspace_path/$site_dir/public
+pwd
 ls -al
 
 cp -r . $workspace_path/$target_dir
