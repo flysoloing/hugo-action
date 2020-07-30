@@ -24,12 +24,19 @@ inputs:
     description: 'hugo config file address'
     required: false
   base_url:
-    description: 'site address'
+    description: 'site index page address'
     required: false
   title:
     description: 'site title'
     required: false
-    default: 'XXX'
+    default: 'China No.1'
+  language_code：
+    description: 'site language code'
+    required: false
+    default: 'en-us'
+  theme:
+    description: 'hugo theme name'
+    required: false
 #outputs:
 #  time:
 #    description: 'The time we greeted you'
@@ -38,3 +45,11 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.hugo_version }}
+    - ${{ inputs.theme_repo_url }}
+    - ${{ inputs.source_repo_url }}
+    - ${{ inputs.target_repo_url }}
+    - ${{ inputs.config_file_url }}
+    - ${{ inputs.base_url }}
+    - ${{ inputs.title }}
+    - ${{ inputs.language_code }}
+    - ${{ inputs.theme }}

@@ -2,48 +2,105 @@
 
 set -e
 
-echo "Hello $1"
-time=$(date)
-echo "--------------------------"
-echo ::set-output name=time::$time
-
-testV=$1
-
-echo $testV
-
-echo "the first param is $testV" 
-
+echo "----------------hugo site build start----------------"
 hugo version
-
 git --version
 
-# https://github.com/<USERNAME>/<PROJECT>.git
-#source_url=$1
-# <PROJECT>
-#source_dir=""
-# https://github.com/<USERNAME>/<USERNAME>.github.io.git
-#target_url=$2
-# https://<USERNAME>.github.io
-#baseURL=$222
+hugo_version=$1
+theme_repo_url=$2
+source_repo_url=$3
+target_repo_url=$4
+config_file_url=$5
+base_url=$6
+title=$7
+language_code=$9
+theme=$9
 
-#cd /home/
+echo "hugo version: $hugo_version"
+echo "theme repo url: $theme_repo_url"
+echo "source repo url: $source_repo_url"
+echo "target repo url: $target_repo_url"
+echo "config file url: $config_file_url"
+echo "base url: $base_url"
+echo "title: $title"
+echo "language_code: $language_code"
+echo "theme: $theme"
 
-#git clone $source_url
+workspace_dir="workspace"
+echo "workspace dir: $workspace_dir"
 
-#cd $source_dir
+workspace_path=~/$workspace_dir
+echo "workspace path: $workspace_path"
 
-#hugo -D
+mkdir $workspace_path
+cd $workspace_path
+pwd
 
-#git submodule add -b master $target_url public
+site_dir="xxxxxx"
+source_dir=${source_repo_url##*/}
+target_dir=${target_repo_url##*/}
 
-#cd public
+echo "site dir: $site_dir"
+echo "source dir: $source_dir"
+echo "target dir: $target_dir"
 
-#git add .
+git clone $source_repo_url
+git clone $target_repo_url
 
-#msg="rebuilding site $(date)"
-#if [ -n "$*" ]; then
-#	msg="$*"
-#fi
-#git commit -m "$msg"
+#初始化站点结构
+hugo new site $site_dir
 
+#将文章目录中的md文档都移动到$site_dir中的，具体以实际文章分组为准
+cd $workspace_path/$source_dir
+ls -al
+cp -r *.md $workspace_path/$site_dir/content
+
+#进行hugo部署前的配置
+cd $workspace_path/$site_dir
+ls -al
+
+#设置config.toml
+if [ -z "$config_file_url" ]; then
+    echo "config file url is none, use basic config params"
+    #替换config.toml中对应的几个字段，baseURL
+    sed -i '/baseURL/ c baseURL = \"$base_url\"' config.toml
+    sed -i '/languageCode/ c languageCode = \"$language_code\"' config.toml
+    sed -i '/title/ c title = \"$title\"' config.toml
+    sed -i '/theme/ c theme = \"$theme\"' config.toml
+else
+    echo "replace default config.toml"
+    wget $config_file_url -O config.toml
+fi
+cat config.toml
+
+#设置themes
+cd $workspace_path/$site_dir/themes
+if [ -z "$theme_repo_url" ]; then
+    echo "theme repo url is none, use default theme"
+fi
+git clone $theme_repo_url
+ls -al
+
+#为每个md文件增加头部信息，如title，
+cd $workspace_path/$site_dir/content
+
+#以上设置完毕，开始hugo部署
+cd $workspace_path/$site_dir
+ls -al
+hugo -D
+
+cd $workspace_path/$site_dir/public
+ls -al
+
+cp -r . $workspace_path/$target_dir
+
+#
+cd $workspace_path/$target_dir
+pwd
+ls -al
+
+
+#git commit -m "...."
 #git push origin master
+
+echo "----------------hugo site build end----------------"
