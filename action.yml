@@ -30,7 +30,7 @@ inputs:
     description: 'site title'
     required: false
     default: 'China No.1'
-  language_code：
+  language_code:
     description: 'site language code'
     required: false
     default: 'en-us'
