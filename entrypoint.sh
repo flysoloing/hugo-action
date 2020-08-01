@@ -6,6 +6,9 @@ echo "----------------hugo site build start----------------"
 hugo version
 git --version
 
+#设置git支持中文文件名的处理
+git config --global core.quotepath false
+
 hugo_version=$1
 theme_repo_url=$2
 source_repo_url=$3
