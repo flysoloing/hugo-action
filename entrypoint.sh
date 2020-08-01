@@ -44,6 +44,14 @@ echo "site dir: $site_dir"
 echo "source dir: $source_dir"
 echo "target dir: $target_dir"
 
+if [ -z "$source_repo_url" ]; then
+    echo "source repo url is none, exit"
+	exit
+fi
+if [ -z "$target_repo_url" ]; then
+    echo "target repo url is none, exit"
+	exit
+fi
 git clone $source_repo_url
 git clone $target_repo_url
 
@@ -55,6 +63,11 @@ cd $workspace_path/$source_dir
 pwd
 ls -al
 cp -r *.md $workspace_path/$site_dir/content
+#检查是否包含front matter，若没有，则加上，事例如下：
+#---
+#title: "title"
+#date: "2020-07-30T20:20:20Z"
+#---
 
 #进行hugo部署前的配置
 cd $workspace_path/$site_dir
@@ -94,18 +107,31 @@ pwd
 ls -al
 hugo -D
 
-cd $workspace_path/$site_dir/public
-pwd
-ls -al
-
-cp -r . $workspace_path/$target_dir
-
-#
+#清空target目录
 cd $workspace_path/$target_dir
 pwd
 ls -al
+ls | xargs rm -rf
+ls -al
+git status
+git rm $(git ls-files -d)
+git status
+git commit -m "remove old files"
+git status
+git push origin master
+git status
 
+#将public目录内容拷贝到target目录
+cd $workspace_path/$site_dir/public
+pwd
+ls -al
+cp -r . $workspace_path/$target_dir
 
+#将target目录提交到GitHub
+cd $workspace_path/$target_dir
+pwd
+ls -al
+#git add .
 #git commit -m "...."
 #git push origin master
 
