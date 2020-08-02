@@ -121,15 +121,20 @@ hugo -D
 cd $workspace_path/$target_dir
 pwd
 ls -al
-ls | xargs rm -rf
-ls -al
-git status
-git rm $(git ls-files -d)
-git status
-git commit -m "remove old files"
-git status
-git push -f -q $target_repo_url_with_token master
-git status
+target_dir_files_num=`ls | wc -l`
+if [ $target_dir_files_num -le 0 ]; then
+    echo "target dir is empty"
+else
+    ls | xargs rm -rf
+    ls -al
+    git status
+    git rm $(git ls-files -d)
+    git status
+    git commit -m "remove old files"
+    git status
+    git push -f -q $target_repo_url_with_token master
+    git status
+fi
 
 #将public目录内容拷贝到target目录
 cd $workspace_path/$site_dir/public
