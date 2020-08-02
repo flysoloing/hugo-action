@@ -122,7 +122,7 @@ git status
 git commit -m "remove old files"
 git status
 
-target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GITHUB_TOKEN}@&/"`
+target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
 echo $target_repo_url_with_token
 git push -f -q $target_repo_url_with_token master
 git status
