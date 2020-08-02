@@ -39,7 +39,7 @@ if [ -z "$target_repo_url" ]; then
 fi
 
 workspace_dir="workspace"
-site_dir="xxxxxx"
+site_dir="hugosite"
 source_dir=${source_repo_url##*/}
 target_dir=${target_repo_url##*/}
 
@@ -67,6 +67,20 @@ pwd
 ls -al
 cp -r *.md $workspace_path/$site_dir/content
 
+#设置themes
+cd $workspace_path/$site_dir/themes
+if [ -z "$theme_repo_url" ]; then
+    echo "theme repo url is none, use default theme"
+fi
+git clone $theme_repo_url $theme
+pwd
+ls -al
+
+#替换config.toml文件
+cd cd $workspace_path/$site_dir/themes/$theme/exampleSite
+cp config.toml $workspace_path/$site_dir
+
+
 #进行hugo部署前的配置
 cd $workspace_path/$site_dir
 pwd
@@ -80,21 +94,12 @@ if [ -z "$config_file_url" ]; then
     sed -i "/languageCode/ c languageCode = \"$language_code\"" config.toml
     sed -i "/title/ c title = \"$title\"" config.toml
     #sed -i "/theme/ c theme = \"$theme\"" config.toml
-	echo "theme = \"$theme\"" >> config.toml
+	#echo "theme = \"$theme\"" >> config.toml
 else
     echo "replace default config.toml"
     wget $config_file_url -O config.toml
 fi
 cat config.toml
-
-#设置themes
-cd $workspace_path/$site_dir/themes
-if [ -z "$theme_repo_url" ]; then
-    echo "theme repo url is none, use default theme"
-fi
-git clone $theme_repo_url $theme
-pwd
-ls -al
 
 #为每个md文件增加头部信息，如title，
 cd $workspace_path/$site_dir/content
