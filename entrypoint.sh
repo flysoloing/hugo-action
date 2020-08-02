@@ -92,7 +92,7 @@ cd $workspace_path/$site_dir/themes
 if [ -z "$theme_repo_url" ]; then
     echo "theme repo url is none, use default theme"
 fi
-git clone $theme_repo_url
+git clone $theme_repo_url $theme
 pwd
 ls -al
 

@@ -33,6 +33,7 @@ inputs:
   theme:
     description: 'hugo theme name'
     required: false
+    default: 'even'
 runs:
   using: 'docker'
   image: 'Dockerfile'
