@@ -6,10 +6,6 @@ branding:
   icon: 'upload-cloud'
   color: 'blue'
 inputs:
-  hugo_version:
-    description: 'hugo version, default is the latest'
-    required: false
-    default: 'latest'
   theme_repo_url:
     description: 'hugo theme github repository, default is hugo-theme-even'
     required: false
@@ -37,14 +33,10 @@ inputs:
   theme:
     description: 'hugo theme name'
     required: false
-#outputs:
-#  time:
-#    description: 'The time we greeted you'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.hugo_version }}
     - ${{ inputs.theme_repo_url }}
     - ${{ inputs.source_repo_url }}
     - ${{ inputs.target_repo_url }}
