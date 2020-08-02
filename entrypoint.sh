@@ -29,6 +29,8 @@ echo "title: $title"
 echo "language_code: $language_code"
 echo "theme: $theme"
 
+target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
+
 if [ -z "$source_repo_url" ]; then
     echo "source repo url is none, exit"
 	exit
@@ -126,9 +128,6 @@ git rm $(git ls-files -d)
 git status
 git commit -m "remove old files"
 git status
-
-target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
-echo $target_repo_url_with_token
 git push -f -q $target_repo_url_with_token master
 git status
 
@@ -142,8 +141,8 @@ cp -r . $workspace_path/$target_dir
 cd $workspace_path/$target_dir
 pwd
 ls -al
-#git add .
-#git commit -m "...."
-#git push origin master
+git add .
+git commit -m "publish new article"
+git push -f -q $target_repo_url_with_token master
 
 echo "----------------hugo site build end----------------"
