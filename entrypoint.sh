@@ -8,8 +8,8 @@ git --version
 
 #设置git支持中文文件名的处理
 git config --global core.quotepath false
-git config user.name "${GITHUB_ACTOR}"
-git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+git config --global user.name "${GITHUB_ACTOR}"
+git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
 theme_repo_url=$1
 source_repo_url=$2
