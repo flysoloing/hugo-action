@@ -77,7 +77,7 @@ pwd
 ls -al
 
 #替换config.toml文件
-cd cd $workspace_path/$site_dir/themes/$theme/exampleSite
+cd $workspace_path/$site_dir/themes/$theme/exampleSite
 cp config.toml $workspace_path/$site_dir
 
 
