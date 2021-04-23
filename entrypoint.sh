@@ -63,7 +63,9 @@ pwd
 echo "----------------clone git repository: $source_dir, $target_dir----------------"
 #git clone $source_repo_url
 #git clone "https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/flysoloing/articles"
-git clone "https://${GH_TOKEN}@github.com/flysoloing/articles"
+#git clone "https://${GH_TOKEN}@github.com/flysoloing/articles"
+git clone "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/flysoloing/articles"
+#git clone "https://${GH_TOKEN}@github.com/flysoloing/articles"
 git clone $target_repo_url
 
 #初始化站点结构
