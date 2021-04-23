@@ -27,9 +27,9 @@ echo "source repo url: $source_repo_url"
 echo "target repo url: $target_repo_url"
 echo "config file url: $config_file_url"
 echo "base url: $base_url"
-echo "title: $site_title"
+echo "site_title: $site_title"
 echo "language_code: $language_code"
-echo "theme: $theme_name"
+echo "theme_name: $theme_name"
 
 #这里的GH_TOKEN很重要，关系到Action是否具有足够的执行权限，需要在target_repo_url对应的repo中设置
 target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
@@ -61,7 +61,8 @@ cd $workspace_path
 pwd
 
 echo "----------------clone git repository: $source_dir, $target_dir----------------"
-git clone $source_repo_url
+#git clone $source_repo_url
+git clone "https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/flysoloing/articles"
 git clone $target_repo_url
 
 #初始化站点结构
