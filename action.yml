@@ -1,15 +1,17 @@
-# action.yml
+#基本设置
 name: 'Hugo Action'
-description: 'Flysoloing Hugo Action'
+description: 'FlySoloing Hugo Action'
 author: 'flysoloing'
+#
 branding:
   icon: 'upload-cloud'
   color: 'blue'
+#入参列表
 inputs:
   theme_repo_url:
-    description: 'hugo theme github repository, default is hugo-theme-even'
+    description: 'hugo theme github repository, default is hugo-theme-qiuqiu'
     required: false
-    default: 'https://github.com/olOwOlo/hugo-theme-even'
+    default: 'https://github.com/flysoloing/hugo-theme-qiuqiu'
   source_repo_url:
     description: 'github article repository'
     required: true
@@ -22,18 +24,19 @@ inputs:
   base_url:
     description: 'site index page address'
     required: false
-  title:
+  site_title:
     description: 'site title'
     required: false
-    default: 'China No.1'
+    default: 'FlySoloing'
   language_code:
     description: 'site language code'
     required: false
     default: 'en-us'
-  theme:
+  theme_name:
     description: 'hugo theme name'
     required: false
-    default: 'even'
+    default: 'hugo-theme-qiuqiu'
+#运行设置
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -43,6 +46,6 @@ runs:
     - ${{ inputs.target_repo_url }}
     - ${{ inputs.config_file_url }}
     - ${{ inputs.base_url }}
-    - ${{ inputs.title }}
+    - ${{ inputs.site_title }}
     - ${{ inputs.language_code }}
-    - ${{ inputs.theme }}
+    - ${{ inputs.theme_name }}

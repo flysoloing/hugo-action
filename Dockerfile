@@ -1,10 +1,15 @@
 # 基于alpine 3.12版本
 FROM alpine:3.12
 
-# 添加新的包镜像地址
-#RUN echo "???" >> /etc/apk/repositories \
-#    && echo "???" >> /etc/apk/repositories
-	
+# 添加新的包镜像地址，国外用官方镜像，国内用清华镜像。官方镜像网址：https://mirrors.alpinelinux.org
+#RUN echo "https://alpine.global.ssl.fastly.net/alpine/v3.12/main" >> /etc/apk/repositories \
+#    && echo "https://alpine.global.ssl.fastly.net/alpine/v3.12/releases" >> /etc/apk/repositories \
+#    && echo "https://alpine.global.ssl.fastly.net/alpine/v3.12/community" >> /etc/apk/repositories
+
+#RUN echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/main" >> /etc/apk/repositories \
+#    && echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/releases" >> /etc/apk/repositories \
+#    && echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/community" >> /etc/apk/repositories
+
 # 安装hugo和git
 RUN apk add --no-cache hugo \
     && apk add --no-cache git
