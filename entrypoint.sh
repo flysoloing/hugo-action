@@ -112,9 +112,9 @@ cat config.toml
 
 #将文章目录中的md文档都移动到$site_dir中的content目录，具体以实际文章分组为准
 cd $workspace_path/$source_dir
-pwd && ls -al
 logger "copy all *.md file to the site content directory"
 cp -r *.md $workspace_path/$site_dir/content
+pwd && ls -al
 
 #设置themes
 cd $workspace_path/$site_dir/themes
@@ -139,7 +139,9 @@ do
     sed -i "1d" $file
     #添加Front Matter信息，如title，date等
     front_matter_title=$(basename $file .md)
-    front_matter_str="---\ntitle: \"$front_matter_title\"\ndate: 2020-08-08\ndescription: \"\"\n---\n"
+    #TODO 创建时间是个问题，最好能通过github api获取每个文件的提交时间
+    front_matter_date="2021-04-01"
+    front_matter_str="---\ntitle: \"$front_matter_title\"\ndate: $front_matter_date\ndescription: \"\"\n---"
     sed -i "1i $front_matter_str" $file
     cat $file
   fi
@@ -181,9 +183,7 @@ else
     ls -al
     git status
     git rm $(git ls-files -d)
-    git status
     git commit -m "remove old files"
-    git status
     git push -f -q $target_repo_url_with_token master
     git status
 fi
