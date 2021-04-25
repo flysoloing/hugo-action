@@ -2,13 +2,16 @@
 
 set -e
 
-log() {
-  date + "%T"
+logger() {
+  log_content=$1
+  log_date=`date +%F`
+  log_time=`date +%T`
+  echo "[Hugo Action] $log_date $log_time INFO: ${content}"
   echo "日志函数测试"
 }
 
-log
-echo `log`
+logger "This logger test"
+echo `logger "Hahahahahahha"`
 
 echo "----------------hugo site build start----------------"
 hugo version
@@ -132,6 +135,18 @@ cat config.toml
 
 #为每个md文件增加头部信息，如title，date等，title取文件名，date取文件生成时间，然后把md文件的一级标题删除TODO
 cd $workspace_path/$site_dir/content
+for file in `pwd`/*
+do
+  if test -f $file
+  then
+    echo $file 是文件
+  fi
+  if test -d $file
+  then
+    echo $file 是目录
+  fi
+done
+
 #先删除首行标题，如# H1
 #sed -i '1d' xxx.md
 echo "----------------add front matter for every md file----------------"
