@@ -31,11 +31,7 @@ echo "site_title: $site_title"
 echo "language_code: $language_code"
 echo "theme_name: $theme_name"
 
-#这里的GH_TOKEN很重要，关系到Action是否具有足够的执行权限，需要在target_repo_url对应的repo中设置
-#target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
-target_repo_url_with_token=$3
-echo "target_repo_url_with_token: $target_repo_url_with_token"
-
+#基本参数校验
 if [ -z "$source_repo_url" ]; then
     echo "source repo url is none, exit"
 	exit
@@ -44,6 +40,11 @@ if [ -z "$target_repo_url" ]; then
     echo "target repo url is none, exit"
 	exit
 fi
+
+#这里的GH_TOKEN很重要，关系到Action是否具有足够的执行权限，需要在source_repo_url对应的repo中设置
+source_repo_url_with_token=`echo $source_repo_url | sed "s/github/${GH_TOKEN}@&/"`
+target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
+echo "target_repo_url_with_token: $target_repo_url_with_token"
 
 workspace_dir="workspace"
 site_dir="hugosite"
@@ -63,10 +64,12 @@ cd $workspace_path
 pwd
 
 echo "----------------clone git repository: $source_dir, $target_dir----------------"
-git clone $source_repo_url
+#git clone $source_repo_url
+git clone $source_repo_url_with_token
 #git clone "https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/flysoloing/articles"
 #git clone "https://${GH_TOKEN}@github.com/flysoloing/articles"
-git clone $target_repo_url
+#git clone $target_repo_url
+git clone $target_repo_url_with_token
 
 #初始化站点结构
 hugo new site $site_dir
