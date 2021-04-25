@@ -87,30 +87,11 @@ hugo new site $site_dir
 logger "there are three directories in the workspace"
 pwd && ls -l
 
-#将文章目录中的md文档都移动到$site_dir中的content目录，具体以实际文章分组为准
-cd $workspace_path/$source_dir
-pwd && ls -al
-logger "copy all *.md file to the site content directory"
-cp -r *.md $workspace_path/$site_dir/content
-
-#设置themes
-cd $workspace_path/$site_dir/themes
-if [ -z "$theme_repo_url" ]; then
-    logger "theme repo url is none, use default theme"
-fi
-
-logger "clone theme git repository: $theme_name"
-git clone $theme_repo_url $theme_name
-pwd && ls -al
-
-#替换config.toml文件
-#echo "----------------replace config.toml with theme exampleSite----------------"
-#cd $workspace_path/$site_dir/themes/$theme_name/exampleSite
-#cp config.toml $workspace_path/$site_dir
-
 #进行hugo部署前的配置
 cd $workspace_path/$site_dir
 pwd && ls -al
+
+echo "theme = \"qiuqiu\"" >> config.toml
 
 #设置config.toml，如果config_file_url参数为空，则用base_url等基本参数进行配置，否则先替换后再进行基本配置，此处可先做非空判断，TODO
 if [ -z "$config_file_url" ]; then
@@ -129,6 +110,22 @@ fi
 logger "show config.toml content"
 cat config.toml
 
+#将文章目录中的md文档都移动到$site_dir中的content目录，具体以实际文章分组为准
+cd $workspace_path/$source_dir
+pwd && ls -al
+logger "copy all *.md file to the site content directory"
+cp -r *.md $workspace_path/$site_dir/content
+
+#设置themes
+cd $workspace_path/$site_dir/themes
+if [ -z "$theme_repo_url" ]; then
+    logger "theme repo url is none, use default theme"
+fi
+
+logger "clone theme git repository: $theme_name"
+git clone $theme_repo_url $theme_name
+pwd && ls -al
+
 #为每个md文件增加头部信息，如title，date等，title取文件名，date取文件生成时间，然后把md文件的一级标题删除TODO
 cd $workspace_path/$site_dir/content
 
@@ -141,7 +138,8 @@ do
     #先删除首行标题，如# H1
     sed -i "1d" $file
     #添加Front Matter信息，如title，date等
-    front_matter_str="---\ntitle: 'xxx'\ndate: 2020-08-08\ndescription: 'xxx'\n---\n"
+    front_matter_title=$(basename $file .md)
+    front_matter_str="---\ntitle: \"$front_matter_title\"\ndate: 2020-08-08\ndescription: \"\"\n---\n"
     sed -i "1i $front_matter_str" $file
     cat $file
   fi
