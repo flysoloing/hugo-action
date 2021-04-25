@@ -2,6 +2,14 @@
 
 set -e
 
+log() {
+  date + "%T"
+  echo "日志函数测试"
+}
+
+log
+echo `log`
+
 echo "----------------hugo site build start----------------"
 hugo version
 git --version
@@ -41,11 +49,6 @@ if [ -z "$target_repo_url" ]; then
 	exit
 fi
 
-#这里的GH_TOKEN很重要，关系到Action是否具有足够的执行权限，需要在source_repo_url对应的repo中设置
-source_repo_url_with_token=`echo $source_repo_url | sed "s/github/${GH_TOKEN}@&/"`
-target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
-echo "target_repo_url_with_token: $target_repo_url_with_token"
-
 workspace_dir="workspace"
 site_dir="hugosite"
 source_dir=${source_repo_url##*/}
@@ -59,20 +62,31 @@ echo "target dir: $target_dir"
 workspace_path=~/$workspace_dir
 echo "workspace path: $workspace_path"
 
+#创建工作区
 mkdir $workspace_path
 cd $workspace_path
 pwd
 
+#这里的GH_TOKEN很重要，关系到Action是否具有足够的执行权限，设置方式如下：
+#1、在GitHub个人账户中设置，路径：Settings --> Developer settings --> Personal access tokens --> Generate new token
+#2、在source_repo_url对应的仓库设置，路径：Settings --> Secrets --> Actions --> New repository secret
+source_repo_url_with_token=`echo $source_repo_url | sed "s/github/${GH_TOKEN}@&/"`
+target_repo_url_with_token=`echo $target_repo_url | sed "s/github/${GH_TOKEN}@&/"`
+echo "source_repo_url_with_token: $source_repo_url_with_token"
+echo "target_repo_url_with_token: $target_repo_url_with_token"
+
 echo "----------------clone git repository: $source_dir, $target_dir----------------"
 #git clone $source_repo_url
-git clone $source_repo_url_with_token
+#git clone $target_repo_url
 #git clone "https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/flysoloing/articles"
 #git clone "https://${GH_TOKEN}@github.com/flysoloing/articles"
-#git clone $target_repo_url
-git clone $target_repo_url_with_token
+git clone $source_repo_url_with_token $source_dir
+git clone $target_repo_url_with_token $target_dir
 
 #初始化站点结构
 hugo new site $site_dir
+
+ls -l
 
 #将文章目录中的md文档都移动到$site_dir中的，具体以实际文章分组为准，TODO
 cd $workspace_path/$source_dir
@@ -111,6 +125,7 @@ if [ -z "$config_file_url" ]; then
     sed -i "/theme/ c theme = \"$theme_name\"" config.toml
 else
     echo "replace config.toml with $config_file_url"
+    #TODO 待测试
     wget $config_file_url -O config.toml
 fi
 cat config.toml
