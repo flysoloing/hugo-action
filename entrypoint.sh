@@ -2,15 +2,15 @@
 
 set -e
 
+#定义日志函数
 logger() {
   log_content=$1
   log_date=`date +%F`
   log_time=`date +%T`
-  echo "[Hugo Action] $log_date $log_time INFO: ${content}"
-  echo "日志函数测试"
+  echo "[Hugo Action] $log_date $log_time INFO: ${log_content}"
 }
 
-logger "This logger test"
+logger "This logger test 日志函数测试"
 echo `logger "Hahahahahahha"`
 
 echo "----------------hugo site build start----------------"
