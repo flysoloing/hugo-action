@@ -126,30 +126,31 @@ logger "clone theme git repository: $theme_name"
 git clone $theme_repo_url $theme_name
 pwd && ls -al
 
-#为每个md文件增加头部信息，如title，date等，title取文件名，date取文件生成时间，然后把md文件的一级标题删除TODO
-cd $workspace_path/$site_dir/content
+#为每个md文件增加头部信息，如title，date等，title取文件名，date取文件生成时间，然后把md文件的一级标题删除
+#实现过于复杂，在文章开始写好Front Matter吧
+#cd $workspace_path/$site_dir/content
 
-logger "delete the first line of the *.md file in a loop, and then add front matter info"
-for file in `pwd`/*
-do
-  if test -f $file
-  then
-    echo $file 是文件
-    #先删除首行标题，如# H1
-    sed -i "1d" $file
-    #添加Front Matter信息，如title，date等
-    front_matter_title=$(basename $file .md)
-    #TODO 创建时间是个问题，最好能通过github api获取每个文件的提交时间
-    front_matter_date="2021-04-01"
-    front_matter_str="---\ntitle: \"$front_matter_title\"\ndate: $front_matter_date\ndescription: \"\"\n---"
-    sed -i "1i $front_matter_str" $file
-    cat $file
-  fi
-  #if test -d $file
-  #then
-    #echo $file 是目录
-  #fi
-done
+#logger "delete the first line of the *.md file in a loop, and then add front matter info"
+#for file in `pwd`/*
+#do
+#  if test -f $file
+#  then
+#    echo $file 是文件
+#    #先删除首行标题，如# H1
+#    sed -i "1d" $file
+#    #添加Front Matter信息，如title，date等
+#    front_matter_title=$(basename $file .md)
+#    #TODO 创建时间是个问题，最好能通过github api获取每个文件的提交时间
+#    front_matter_date="2021-04-01"
+#    front_matter_str="---\ntitle: \"$front_matter_title\"\ndate: $front_matter_date\ndescription: \"\"\n---"
+#    sed -i "1i $front_matter_str" $file
+#    cat $file
+#  fi
+#  #if test -d $file
+#  #then
+#    #echo $file 是目录
+#  #fi
+#done
 
 #先删除首行标题，如# H1
 #sed -i '1d' xxx.md
