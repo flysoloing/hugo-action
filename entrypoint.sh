@@ -85,8 +85,6 @@ git clone $target_repo_url_with_token $target_dir
 #初始化站点结构
 logger "create new site: $site_dir"
 hugo new site $site_dir
-echo "theme = \"xxx\"" >> config.toml
-echo "hasCJKLanguage = false" >> config.toml
 
 logger "there are three directories in the workspace"
 pwd && ls -l
@@ -95,9 +93,15 @@ pwd && ls -l
 cd $workspace_path/$site_dir
 pwd && ls -al
 
+echo "theme = \"xxx\"" >> config.toml
+echo "hasCJKLanguage = false" >> config.toml
+
+logger "show config.toml content"
+cat config.toml
+
 #设置config.toml，如果config_file_url参数为空，则用base_url等基本参数进行配置，否则先替换后再进行基本配置，此处可先做非空判断，TODO
 if [ -z "$config_file_url" ]; then
-    logger "config file url is none, replace basic config with $base_url, $language_code, $site_title, $theme_name"
+    logger "config file url is none, replace basic config with input params"
     #替换config.toml中对应的几个字段，baseURL
     sed -i "/baseURL/ c baseURL = \"${base_url}\"" config.toml
     sed -i "/languageCode/ c languageCode = \"$language_code\"" config.toml
