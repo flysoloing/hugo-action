@@ -135,7 +135,8 @@ pwd && ls -al
 
 #为每个md文件增加头部信息，如title，date等，title取文件名，date取文件生成时间，然后把md文件的一级标题删除
 #实现过于复杂，在文章开始写好Front Matter吧
-#cd $workspace_path/$site_dir/content
+cd $workspace_path/$site_dir/content
+pwd && ls -al
 
 #logger "delete the first line of the *.md file in a loop, and then add front matter info"
 #for file in `pwd`/*
