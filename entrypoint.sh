@@ -107,7 +107,7 @@ if [ -z "$config_file_url" ]; then
     sed -i "/languageCode/ c languageCode = \"$language_code\"" config.toml
     sed -i "/title/ c title = \"$site_title\"" config.toml
     sed -i "/theme/ c theme = \"$theme_name\"" config.toml
-    sed -i "/hasCJKLanguage/ c hasCJKLanguage = \"$has_cjk_language\"" config.toml
+    sed -i "/hasCJKLanguage/ c hasCJKLanguage = $has_cjk_language" config.toml
 else
     logger "replace config.toml with $config_file_url"
     #TODO 待测试
