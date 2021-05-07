@@ -121,8 +121,9 @@ cat config.toml
 #用rsync命令可以简单实现
 cd $workspace_path/$source_dir
 pwd && ls -al
-logger "copy all *.md file to the site content directory"
+logger "find all *.md file from source directory"
 find . -type f -name "*.md" | xargs tar -czvf abcxyz.tar.gz
+logger "copy all *.md file to the site content directory"
 tar -xzvf abcxyz.tar.gz -C $workspace_path/$site_dir/content
 
 #设置themes
