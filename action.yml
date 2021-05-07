@@ -36,6 +36,10 @@ inputs:
     description: 'hugo theme name'
     required: false
     default: 'hugo-theme-qiuqiu'
+  has_cjk_language:
+    description: 'Chinese/Japanese/Korean language support'
+    required: false
+    default: 'false'
 #运行设置
 runs:
   using: 'docker'
@@ -49,3 +53,4 @@ runs:
     - ${{ inputs.site_title }}
     - ${{ inputs.language_code }}
     - ${{ inputs.theme_name }}
+    - ${{ inputs.has_cjk_language }}

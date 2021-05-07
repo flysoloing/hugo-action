@@ -27,6 +27,7 @@ base_url=$5
 site_title=$6
 language_code=$7
 theme_name=$8
+has_cjk_language=$9
 
 logger "theme repo url: $theme_repo_url"
 logger "source repo url: $source_repo_url"
@@ -36,6 +37,7 @@ logger "base url: $base_url"
 logger "site_title: $site_title"
 logger "language_code: $language_code"
 logger "theme_name: $theme_name"
+logger "has_cjk_language: $has_cjk_language"
 
 #基本参数校验
 if [ -z "$source_repo_url" ]; then
@@ -84,6 +86,7 @@ git clone $target_repo_url_with_token $target_dir
 logger "create new site: $site_dir"
 hugo new site $site_dir
 echo "theme = \"xxx\"" >> config.toml
+echo "hasCJKLanguage = false" >> config.toml
 
 logger "there are three directories in the workspace"
 pwd && ls -l
@@ -100,6 +103,7 @@ if [ -z "$config_file_url" ]; then
     sed -i "/languageCode/ c languageCode = \"$language_code\"" config.toml
     sed -i "/title/ c title = \"$site_title\"" config.toml
     sed -i "/theme/ c theme = \"$theme_name\"" config.toml
+    sed -i "/hasCJKLanguage/ c hasCJKLanguage = \"$has_cjk_language\"" config.toml
 else
     logger "replace config.toml with $config_file_url"
     #TODO 待测试
