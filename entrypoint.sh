@@ -118,10 +118,12 @@ logger "show config.toml content"
 cat config.toml
 
 #将文章目录中的md文档都移动到$site_dir中的content目录，具体以实际文章分组为准
+#用rsync命令可以简单实现
 cd $workspace_path/$source_dir
-logger "copy all *.md file to the site content directory"
-cp -r *.md $workspace_path/$site_dir/content
 pwd && ls -al
+logger "copy all *.md file to the site content directory"
+find . -type f -name "*.md" | xargs tar -czvf abcxyz.tar.gz
+tar -xzvf abcxyz.tar.gz -C $workspace_path/$site_dir/content
 
 #设置themes
 cd $workspace_path/$site_dir/themes
