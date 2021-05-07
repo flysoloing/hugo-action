@@ -39,7 +39,7 @@ inputs:
   has_cjk_language:
     description: 'Chinese/Japanese/Korean language support'
     required: false
-    default: 'false'
+    default: false
 #运行设置
 runs:
   using: 'docker'
