@@ -1,5 +1,5 @@
 # 基于alpine 3.12版本
-FROM alpine:3.13
+FROM alpine:3.14
 
 # 添加新的包镜像地址，国外用官方镜像，国内用清华镜像。官方镜像网址：https://mirrors.alpinelinux.org
 #RUN echo "https://alpine.global.ssl.fastly.net/alpine/v3.12/main" >> /etc/apk/repositories \
