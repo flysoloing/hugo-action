@@ -186,6 +186,17 @@ hugo -D
 cd $workspace_path/$target_dir
 pwd && ls -al
 
+#检测是否包含CNAME文件，若包含，则需保留该文件
+cname_file="CNAME"
+dot_cname_file=".CNAME"
+
+if [ -e $cname_file ]; then
+    logger "CNAME file exist, CNAME -> .CNAME"
+    mv $cname_file $dot_cname_file
+else
+    logger "CNAME file not exist"
+fi
+
 target_dir_files_num=`ls | wc -l`
 if [ $target_dir_files_num -le 0 ]; then
     logger "the target dir is empty"
@@ -210,6 +221,13 @@ cp -r . $workspace_path/$target_dir
 #将target目录提交到GitHub
 cd $workspace_path/$target_dir
 pwd && ls -al
+
+if [ -e $dot_cname_file ]; then
+    logger ".CNAME file exist, .CNAME -> CNAME"
+    mv $dot_cname_file $cname_file
+else
+    logger ".CNAME file not exist"
+fi
 
 logger "commit new target dir content to remote repo"
 git add .
