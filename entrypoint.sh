@@ -28,7 +28,7 @@ site_title=$6
 language_code=$7
 theme_name=$8
 has_cjk_language=$9
-summary_length=$10
+summary_length=${10}
 
 logger "theme repo url: $theme_repo_url"
 logger "source repo url: $source_repo_url"
@@ -97,6 +97,7 @@ pwd && ls -al
 
 echo "theme = \"xxx\"" >> config.toml
 echo "hasCJKLanguage = false" >> config.toml
+echo "summaryLength = 70" >> config.toml
 
 logger "show config.toml content"
 cat config.toml
