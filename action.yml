@@ -40,6 +40,10 @@ inputs:
     description: 'Chinese/Japanese/Korean language support'
     required: false
     default: false
+  summary_length:
+    description: 'article summary length'
+    required: false
+    default: 140
 #运行设置
 runs:
   using: 'docker'
@@ -54,3 +58,4 @@ runs:
     - ${{ inputs.language_code }}
     - ${{ inputs.theme_name }}
     - ${{ inputs.has_cjk_language }}
+    - ${{ inputs.summary_length }}
