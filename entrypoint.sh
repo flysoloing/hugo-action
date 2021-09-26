@@ -28,6 +28,7 @@ site_title=$6
 language_code=$7
 theme_name=$8
 has_cjk_language=$9
+summary_length=$10
 
 logger "theme repo url: $theme_repo_url"
 logger "source repo url: $source_repo_url"
@@ -38,6 +39,7 @@ logger "site_title: $site_title"
 logger "language_code: $language_code"
 logger "theme_name: $theme_name"
 logger "has_cjk_language: $has_cjk_language"
+logger "summary_length: $summary_length"
 
 #基本参数校验
 if [ -z "$source_repo_url" ]; then
@@ -108,6 +110,7 @@ if [ -z "$config_file_url" ]; then
     sed -i "/title/ c title = \"$site_title\"" config.toml
     sed -i "/theme/ c theme = \"$theme_name\"" config.toml
     sed -i "/hasCJKLanguage/ c hasCJKLanguage = $has_cjk_language" config.toml
+    sed -i "/summaryLength/ c summaryLength = $summary_length" config.toml
 else
     logger "replace config.toml with $config_file_url"
     #TODO 待测试
