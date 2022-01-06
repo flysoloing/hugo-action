@@ -184,7 +184,8 @@ cd $workspace_path/$site_dir
 pwd && ls -al
 
 logger "deploy site: $site_dir"
-hugo -D
+#hugo -D
+hugo
 
 #清空target目录
 cd $workspace_path/$target_dir
