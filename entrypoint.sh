@@ -2,6 +2,12 @@
 
 set -e
 
+cat /etc/shells
+
+echo $SHELL
+
+ls -al /bin/sh
+
 #定义日志函数
 logger() {
   log_content=$1
