@@ -10,26 +10,12 @@ logger() {
   echo "[Hugo Action] $log_date $log_time INFO: ${log_content}"
 }
 
-logger "ls -al * sh"
-ls -al /bin/*sh
-
 #由于alpine默认支持的busybox不支持数组等操作，为了避免数组报错，将原sh软链删除，并新建一个指向bash的sh软链
 #rm -f /bin/sh && ln -s /bin/bash /bin/sh
-
-#test
-logger "cat"
+logger "list all valid login shells"
 cat /etc/shells
 
-logger "echo SHELL"
-echo $SHELL
-
-logger "echo $ 0"
-echo $0
-
-logger "ls -al"
-ls -al /bin/sh
-
-logger "ls -al * sh"
+logger "list all shells and soft link"
 ls -al /bin/*sh
 
 logger "hugo action build start"
@@ -242,6 +228,9 @@ fi
 cname_reg='.CNAME$'
 git_reg='.git$'
 gitignore_reg='.gitignore$'
+
+#tset
+diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public
 
 old_fis="$IFS"
 IFS=$'\n'
