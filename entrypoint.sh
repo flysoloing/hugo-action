@@ -251,6 +251,7 @@ for i in "${tmp_arr[@]}"; do
   tmp=${i:8}
   #将字符串中的": "替换为"/"
   tmp_path=${tmp/: //}
+  logger "only file: $tmp_path"
   #如果包含.CNAME，.git或.gitignore，则不做处理；否则删除，删除前判断类型是文件还是目录，做不同的删除逻辑
   if [[ $tmp_path =~ $cname_reg ]]; then
       logger "$tmp_path include .CNAME, do not delete"
