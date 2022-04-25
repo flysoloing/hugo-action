@@ -17,6 +17,8 @@ RUN apk update \
     && apk add --no-cache hugo \
     && apk add --no-cache git
 
+RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
+
 # 拷贝代码仓库里的entrypoint.sh到容器的/路径下
 COPY entrypoint.sh /entrypoint.sh
 

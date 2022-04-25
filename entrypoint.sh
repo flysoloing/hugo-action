@@ -14,7 +14,7 @@ logger "ls -al * sh"
 ls -al /bin/*sh
 
 #由于alpine默认支持的busybox不支持数组等操作，为了避免数组报错，将原sh软链删除，并新建一个指向bash的sh软链
-rm -f /bin/sh && ln -s /bin/bash /bin/sh
+#rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 #test
 logger "cat"
