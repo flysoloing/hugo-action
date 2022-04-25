@@ -1,6 +1,10 @@
-#!/bin/ash
+#!/bin/sh
 
 set -e
+
+#由于alpine默认支持的busybox不支持数组等操作，为了避免数组报错，将原sh软链删除，并新建一个指向ash的sh软链
+#ash是一个轻量级的shell，完全兼容bash
+rm -f /bin/sh && ln -s /bin/ash sh
 
 #定义日志函数
 logger() {
