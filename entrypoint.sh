@@ -23,6 +23,9 @@ echo $0
 logger "ls -al"
 ls -al /bin/sh
 
+logger "ls -al * sh"
+ls -al /bin/*sh
+
 logger "hugo action build start"
 hugo version
 git --version
