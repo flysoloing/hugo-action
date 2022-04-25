@@ -2,12 +2,6 @@
 
 set -e
 
-cat /etc/shells
-
-echo $SHELL
-
-ls -al /bin/sh
-
 #定义日志函数
 logger() {
   log_content=$1
@@ -15,6 +9,19 @@ logger() {
   log_time=`date +%T`
   echo "[Hugo Action] $log_date $log_time INFO: ${log_content}"
 }
+
+#test
+logger "cat"
+cat /etc/shells
+
+logger "echo SHELL"
+echo $SHELL
+
+logger "echo $ 0"
+echo $0
+
+logger "ls -al"
+ls -al /bin/sh
 
 logger "hugo action build start"
 hugo version
