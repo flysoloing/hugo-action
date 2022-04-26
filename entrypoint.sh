@@ -233,6 +233,7 @@ git_reg='.git$'
 gitignore_reg='.gitignore$'
 
 #tset
+logger "diff $workspace_path/$target_dir $workspace_path/$site_dir/public"
 diff -q -r $workspace_path/$target_dir $workspace_path/$site_dir/public
 
 #diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
