@@ -230,7 +230,13 @@ git_reg='.git$'
 gitignore_reg='.gitignore$'
 
 #tset
-diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public
+diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public > diffres.txt
+
+cat diffres.txt
+
+mapfile my_arr < diffres.txt
+
+echo ${my_arr[@]}
 
 old_fis="$IFS"
 IFS=$'\n'
