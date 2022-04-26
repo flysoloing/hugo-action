@@ -230,17 +230,11 @@ git_reg='.git$'
 gitignore_reg='.gitignore$'
 
 #tset
-diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public > diffres.txt
-
+diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
 cat diffres.txt
 
-mapfile my_arr < diffres.txt
+mapfile tmp_arr < diffres.txt
 
-echo ${my_arr[@]}
-
-old_fis="$IFS"
-IFS=$'\n'
-tmp_arr=(`diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]"`)
 for i in "${tmp_arr[@]}"; do
   #移除前面的"Only in "无效字符串
   tmp=${i:8}
@@ -268,7 +262,38 @@ for i in "${tmp_arr[@]}"; do
       logger "deleted: $tmp_path"
   fi
 done
-IFS="$old_fis"
+
+#old_fis="$IFS"
+#IFS=$'\n'
+#tmp_arr=(`diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]"`)
+#for i in "${tmp_arr[@]}"; do
+#  #移除前面的"Only in "无效字符串
+#  tmp=${i:8}
+#  #将字符串中的": "替换为"/"
+#  tmp_path=${tmp/: //}
+#  logger "only file: $tmp_path"
+#  #如果包含.CNAME，.git或.gitignore，则不做处理；否则删除，删除前判断类型是文件还是目录，做不同的删除逻辑
+#  if [[ $tmp_path =~ $cname_reg ]]; then
+#      logger "$tmp_path include .CNAME, do not delete"
+#      continue
+#  fi
+#  if [[ $tmp_path =~ $git_reg ]]; then
+#      logger "$tmp_path include .git, do not delete"
+#      continue
+#  fi
+#  if [[ $tmp_path =~ $gitignore_reg ]]; then
+#      logger "$tmp_path include .gitignore, do not delete"
+#      continue
+#  fi
+#  if [ -d "$tmp_path" ]; then
+#      rm -rf $tmp_path
+#      logger "deleted: $tmp_path"
+#  elif [ -f "$tmp_path" ]; then
+#      rm $tmp_path
+#      logger "deleted: $tmp_path"
+#  fi
+#done
+#IFS="$old_fis"
 
 #将public目录内容拷贝到target目录
 cd $workspace_path/$site_dir/public
