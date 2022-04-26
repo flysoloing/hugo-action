@@ -234,7 +234,7 @@ gitignore_reg='.gitignore$'
 
 #tset
 #diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
-diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep '^Only' | grep '$target_dir[:|/]' > diffres.txt
+diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "^Only" | grep "$target_dir[:|/]" > diffres.txt
 cat diffres.txt
 
 mapfile tmp_arr < diffres.txt
