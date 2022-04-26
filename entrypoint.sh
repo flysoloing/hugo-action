@@ -195,6 +195,9 @@ logger "deploy site: $site_dir"
 #hugo -D
 hugo
 
+cd $workspace_path/$site_dir/public
+pwd && ls -al
+
 #清空target目录
 cd $workspace_path/$target_dir
 pwd && ls -al
@@ -230,10 +233,12 @@ git_reg='.git$'
 gitignore_reg='.gitignore$'
 
 #tset
-diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
+#diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
+diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep '^Only' | grep '$target_dir[:|/]' > diffres.txt
 cat diffres.txt
 
 mapfile tmp_arr < diffres.txt
+rm diffres.txt
 
 for i in "${tmp_arr[@]}"; do
   #移除前面的"Only in "无效字符串
@@ -242,7 +247,7 @@ for i in "${tmp_arr[@]}"; do
   tmp_path=${tmp/: //}
   logger "only file: $tmp_path"
   #如果包含.CNAME，.git或.gitignore，则不做处理；否则删除，删除前判断类型是文件还是目录，做不同的删除逻辑
-  if [[ $tmp_path =~ $cname_reg ]]; then
+  if [ $tmp_path =~ $cname_reg ]; then
       logger "$tmp_path include .CNAME, do not delete"
       continue
   fi
