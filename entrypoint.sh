@@ -10,14 +10,6 @@ logger() {
   echo "[Hugo Action] $log_date $log_time INFO: ${log_content}"
 }
 
-#由于alpine默认支持的busybox不支持数组等操作，为了避免数组报错，将原sh软链删除，并新建一个指向bash的sh软链
-#rm -f /bin/sh && ln -s /bin/bash /bin/sh
-logger "list all valid login shells"
-cat /etc/shells
-
-logger "list all shells and soft link"
-ls -al /bin/*sh
-
 logger "hugo action build start"
 hugo version
 git --version
@@ -192,7 +184,8 @@ cd $workspace_path/$site_dir
 pwd && ls -al
 
 logger "deploy site: $site_dir"
-hugo -D
+#hugo -D
+hugo
 
 cd $workspace_path/$site_dir/public
 pwd && ls -al
@@ -212,95 +205,19 @@ else
     logger "CNAME file not exist"
 fi
 
-#target_dir_files_num=`ls | wc -l`
-#if [ $target_dir_files_num -le 0 ]; then
-#    logger "the target dir is empty"
-#else
-#    logger "remove all target dir content except .git and .gitignore file"
-#    ls | xargs rm -rf
-#    ls -al
-#    git status
-#    git rm $(git ls-files -d)
-#    git commit -m "remove old files"
-#    git push -f -q $target_repo_url_with_token master
-#    git status
-#fi
-
-#2.0，为了提升上传效率，不再全部清空所有内容，仅仅把target有的public没有内容删除，其余全部用public覆盖
-cname_reg='.CNAME$'
-git_reg='.git$'
-gitignore_reg='.gitignore$'
-
-#tset
-logger "diff $workspace_path/$target_dir $workspace_path/$site_dir/public"
-diff -q -r $workspace_path/$target_dir $workspace_path/$site_dir/public
-
-#diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]" > diffres.txt
-diff -q -r $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "^Only" | grep "$target_dir[:|/]" > diffres.txt
-cat diffres.txt
-
-mapfile tmp_arr < diffres.txt
-rm diffres.txt
-
-for i in "${tmp_arr[@]}"; do
-  #移除前面的"Only in "无效字符串
-  tmp=${i:8}
-  #将字符串中的": "替换为"/"
-  tmp_path=${tmp/: //}
-  logger "only file: $tmp_path"
-  #如果包含.CNAME，.git或.gitignore，则不做处理；否则删除，删除前判断类型是文件还是目录，做不同的删除逻辑
-  if [ $tmp_path =~ $cname_reg ]; then
-      logger "$tmp_path include .CNAME, do not delete"
-      continue
-  fi
-  if [[ $tmp_path =~ $git_reg ]]; then
-      logger "$tmp_path include .git, do not delete"
-      continue
-  fi
-  if [[ $tmp_path =~ $gitignore_reg ]]; then
-      logger "$tmp_path include .gitignore, do not delete"
-      continue
-  fi
-  if [ -d "$tmp_path" ]; then
-      rm -rf $tmp_path
-      logger "deleted: $tmp_path"
-  elif [ -f "$tmp_path" ]; then
-      rm $tmp_path
-      logger "deleted: $tmp_path"
-  fi
-done
-
-#old_fis="$IFS"
-#IFS=$'\n'
-#tmp_arr=(`diff -qr $workspace_path/$target_dir $workspace_path/$site_dir/public | grep "Only" | grep "$workspace_path/$target_dir[:|/]"`)
-#for i in "${tmp_arr[@]}"; do
-#  #移除前面的"Only in "无效字符串
-#  tmp=${i:8}
-#  #将字符串中的": "替换为"/"
-#  tmp_path=${tmp/: //}
-#  logger "only file: $tmp_path"
-#  #如果包含.CNAME，.git或.gitignore，则不做处理；否则删除，删除前判断类型是文件还是目录，做不同的删除逻辑
-#  if [[ $tmp_path =~ $cname_reg ]]; then
-#      logger "$tmp_path include .CNAME, do not delete"
-#      continue
-#  fi
-#  if [[ $tmp_path =~ $git_reg ]]; then
-#      logger "$tmp_path include .git, do not delete"
-#      continue
-#  fi
-#  if [[ $tmp_path =~ $gitignore_reg ]]; then
-#      logger "$tmp_path include .gitignore, do not delete"
-#      continue
-#  fi
-#  if [ -d "$tmp_path" ]; then
-#      rm -rf $tmp_path
-#      logger "deleted: $tmp_path"
-#  elif [ -f "$tmp_path" ]; then
-#      rm $tmp_path
-#      logger "deleted: $tmp_path"
-#  fi
-#done
-#IFS="$old_fis"
+target_dir_files_num=`ls | wc -l`
+if [ $target_dir_files_num -le 0 ]; then
+    logger "the target dir is empty"
+else
+    logger "remove all target dir content except .git and .gitignore file"
+    ls | xargs rm -rf
+    ls -al
+    git status
+    git rm $(git ls-files -d)
+    git commit -m "remove old files"
+    git push -f -q $target_repo_url_with_token master
+    git status
+fi
 
 #将public目录内容拷贝到target目录
 cd $workspace_path/$site_dir/public
