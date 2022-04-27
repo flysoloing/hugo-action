@@ -192,8 +192,7 @@ cd $workspace_path/$site_dir
 pwd && ls -al
 
 logger "deploy site: $site_dir"
-#hugo -D
-hugo
+hugo -D
 
 cd $workspace_path/$site_dir/public
 pwd && ls -al
