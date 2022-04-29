@@ -10,14 +10,6 @@ logger() {
   echo "[Hugo Action] $log_date $log_time INFO: ${log_content}"
 }
 
-#由于alpine默认支持的busybox不支持数组等操作，为了避免数组报错，将原sh软链删除，并新建一个指向bash的sh软链
-#rm -f /bin/sh && ln -s /bin/bash /bin/sh
-logger "list all valid login shells"
-cat /etc/shells
-
-logger "list all shells and soft link"
-ls -al /bin/*sh
-
 logger "hugo action build start"
 hugo version
 git --version

@@ -11,14 +11,8 @@ FROM alpine:3.14
 #    && echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/community" >> /etc/apk/repositories
 
 # 安装bash，hugo和git
-RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache bash \
-    && apk add --no-cache hugo \
+RUN apk add --no-cache hugo \
     && apk add --no-cache git
-
-# 设置bash为默认shell
-RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 # 拷贝代码仓库里的entrypoint.sh到容器的/路径下
 COPY entrypoint.sh /entrypoint.sh
