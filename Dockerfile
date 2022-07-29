@@ -10,9 +10,11 @@ FROM alpine:3.14
 #    && echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/releases" >> /etc/apk/repositories \
 #    && echo "https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.12/community" >> /etc/apk/repositories
 
-# 安装bash，hugo和git
+# 安装hugo、git、curl、libxml2
 RUN apk add --no-cache hugo \
-    && apk add --no-cache git
+    && apk add --no-cache git \
+    && apk add --no-cache curl \
+    && apk add --no-cache libxml2
 
 # 拷贝代码仓库里的entrypoint.sh到容器的/路径下
 COPY entrypoint.sh /entrypoint.sh

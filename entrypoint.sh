@@ -13,6 +13,8 @@ logger() {
 logger "hugo action build start"
 hugo version
 git --version
+curl --version
+xmllint --version
 
 #设置git支持中文文件名的处理
 git config --global core.quotepath false
@@ -55,11 +57,13 @@ workspace_dir="workspace"
 site_dir="hugosite"
 source_dir=${source_repo_url##*/}
 target_dir=${target_repo_url##*/}
+tmp_dir="tmpdir"
 
 logger "workspace dir: $workspace_dir"
 logger "site dir: $site_dir"
 logger "source dir: $source_dir"
 logger "target dir: $target_dir"
+logger "tmp dir: $tmp_dir"
 
 workspace_path=~/$workspace_dir
 logger "workspace path: $workspace_path"
@@ -88,7 +92,10 @@ git clone $target_repo_url_with_token $target_dir
 logger "create new site: $site_dir"
 hugo new site $site_dir
 
-logger "there are three directories in the workspace"
+#创建tmp目录
+mkdir $tmp_dir
+
+logger "there are four directories in the workspace"
 pwd && ls -l
 
 #进行hugo部署前的配置
@@ -246,9 +253,58 @@ else
     logger ".CNAME file not exist"
 fi
 
+#判断git status状态，如果没有可提交的，则不执行提交操作
+if [ -z "$(git status --porcelain)" ]; then
+    logger "nothing to commit, working tree clean"
+    exit
+fi
+
 logger "commit new target dir content to remote repo"
 git add .
 git commit -m "publish new article"
 git push -f -q $target_repo_url_with_token master
+
+#调用百度API自动提交新增URL
+cd $workspace_path/$tmp_dir
+
+#先下载
+logger "download old sitemap.xml to tmp dir"
+curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
+#将sitemap.xml拷贝到tmp目录
+logger "copy new sitemap.xml to tmp dir"
+cp $workspace_path/$site_dir/public/sitemap.xml new-sitemap.xml
+
+#格式化
+xmllint --format old-sitemap.xml > old-sitemap.txt
+xmllint --format new-sitemap.xml > new-sitemap.txt
+
+#去掉元素<urlset>里的xmlns属性，否则会报“XPath set is empty”的异常，删除<urlset xmlns="...">这行，然后加上新的<urlset>
+sed -i "2d" old-sitemap.txt
+sed -i "2d" new-sitemap.txt
+sed -i "1a <urlset>" old-sitemap.txt
+sed -i "1a <urlset>" new-sitemap.txt
+
+#使用libxml2包命令，将url提取到old-urls.txt文本
+xmllint --xpath "//url/loc/text()" old-sitemap.txt > old-urls.txt
+xmllint --xpath "//url/loc/text()" new-sitemap.txt > new-urls.txt
+
+#由于xmlint命令提取出来的为单行文本，需要将其按行展示
+sed -i "s/\/https/\/\r\nhttps/g" old-urls.txt
+sed -i "s/\/https/\/\r\nhttps/g" new-urls.txt
+
+#比较old-urls.txt和new-urls.txt文件，找出new-urls.txt中有的url，将新增的url存入urls.txt
+grep -vFf old-urls.txt new-urls.txt > urls.txt
+pwd && ls -al
+
+#如果urls.txt文件为空，则不进行百度提交
+if [ ! -s urls.txt ]; then
+    logger "urls.txt is empty, not commit"
+    exit
+fi
+
+#调用百度API提交
+logger "commit new urls to baidu"
+cat urls.txt
+curl -H 'Content-Type:text/plain' --data-binary @urls.txt "http://data.zz.baidu.com/urls?site=$base_url&token=${BAIDU_TOKEN}"
 
 logger "hugo action build success"
