@@ -284,11 +284,23 @@ cat new-sitemap.xml
 xmllint --format old-sitemap.xml > old-sitemap.txt
 xmllint --format new-sitemap.xml > new-sitemap.txt
 
+logger "show old-sitemap.txt"
+cat old-sitemap.txt
+
+logger "show new-sitemap.txt"
+cat new-sitemap.txt
+
 #去掉元素<urlset>里的xmlns属性，否则会报“XPath set is empty”的异常，删除<urlset xmlns="...">这行，然后加上新的<urlset>
 sed -i "2d" old-sitemap.txt
 sed -i "2d" new-sitemap.txt
 sed -i "1a <urlset>" old-sitemap.txt
 sed -i "1a <urlset>" new-sitemap.txt
+
+logger "show old-sitemap.txt 222"
+cat old-sitemap.txt
+
+logger "show new-sitemap.txt 222"
+cat new-sitemap.txt
 
 #使用libxml2包命令，将url提取到old-urls.txt文本
 xmllint --xpath "//url/loc/text()" old-sitemap.txt > old-urls.txt
@@ -297,6 +309,12 @@ xmllint --xpath "//url/loc/text()" new-sitemap.txt > new-urls.txt
 #由于xmlint命令提取出来的为单行文本，需要将其按行展示
 sed -i "s/\/https/\/\r\nhttps/g" old-urls.txt
 sed -i "s/\/https/\/\r\nhttps/g" new-urls.txt
+
+logger "show old-urls.txt"
+cat old-urls.txt
+
+logger "show new-urls.txt"
+cat new-urls.txt
 
 #比较old-urls.txt和new-urls.txt文件，找出new-urls.txt中有的url，将新增的url存入urls.txt
 grep -vFf old-urls.txt new-urls.txt > urls.txt
