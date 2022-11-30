@@ -274,6 +274,12 @@ curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
 logger "copy new sitemap.xml to tmp dir"
 cp $workspace_path/$site_dir/public/sitemap.xml new-sitemap.xml
 
+logger "show old-sitemap.xml"
+cat old-sitemap.xml
+
+logger "show new-sitemap.xml"
+cat new-sitemap.xml
+
 #格式化
 xmllint --format old-sitemap.xml > old-sitemap.txt
 xmllint --format new-sitemap.xml > new-sitemap.txt
