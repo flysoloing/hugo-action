@@ -274,33 +274,15 @@ curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
 logger "copy new sitemap.xml to tmp dir"
 cp $workspace_path/$site_dir/public/sitemap.xml new-sitemap.xml
 
-logger "show old-sitemap.xml"
-cat old-sitemap.xml
-
-logger "show new-sitemap.xml"
-cat new-sitemap.xml
-
 #格式化
 xmllint --format old-sitemap.xml > old-sitemap.txt
 xmllint --format new-sitemap.xml > new-sitemap.txt
-
-logger "show old-sitemap.txt"
-cat old-sitemap.txt
-
-logger "show new-sitemap.txt"
-cat new-sitemap.txt
 
 #去掉元素<urlset>里的xmlns属性，否则会报“XPath set is empty”的异常，删除<urlset xmlns="...">这行，然后加上新的<urlset>
 sed -i "2d" old-sitemap.txt
 sed -i "2d" new-sitemap.txt
 sed -i "1a <urlset>" old-sitemap.txt
 sed -i "1a <urlset>" new-sitemap.txt
-
-logger "show old-sitemap.txt 222"
-cat old-sitemap.txt
-
-logger "show new-sitemap.txt 222"
-cat new-sitemap.txt
 
 #使用libxml2包命令，将url提取到old-urls.txt文本
 xmllint --xpath "//url/loc/text()" old-sitemap.txt > old-urls.txt
@@ -317,6 +299,7 @@ logger "show new-urls.txt"
 cat new-urls.txt
 
 #比较old-urls.txt和new-urls.txt文件，找出new-urls.txt中有的url，将新增的url存入urls.txt
+#如果两个文件相同，在alpine下，可能grep执行会出错，具体原因待查，影响范围仅限百度资源提交异常
 grep -vFf old-urls.txt new-urls.txt > urls.txt
 pwd && ls -al
 
