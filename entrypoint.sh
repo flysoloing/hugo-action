@@ -303,7 +303,7 @@ logger "show new-urls.txt"
 cat new-urls.txt
 
 #比较old-urls.txt和new-urls.txt文件，找出new-urls.txt中有的url，将新增的url存入urls.txt
-#如果两个文件相同，在alpine下，可能grep执行会出错，具体原因待查，影响范围仅限百度资源提交异常
+#如果两个文件相同，在alpine下，可能grep执行会出错，原因是alpine默认是busybox的阉割版grep，需安装gnu版grep
 grep -vFf old-urls.txt new-urls.txt > urls.txt
 pwd && ls -al
 
