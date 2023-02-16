@@ -15,6 +15,7 @@ hugo version
 git --version
 curl --version
 xmllint --version
+grep --version
 
 #设置git支持中文文件名的处理
 git config --global core.quotepath false
@@ -242,6 +243,12 @@ cd $workspace_path/$site_dir/public
 logger "copy the site public directory to target dir"
 cp -r . $workspace_path/$target_dir
 
+#提前把老的sitemap.xml下载到临时目录
+cd $workspace_path/$tmp_dir
+logger "download old sitemap.xml to tmp dir"
+curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
+pwd && ls -al
+
 #将target目录提交到GitHub
 cd $workspace_path/$target_dir
 pwd && ls -al
@@ -267,9 +274,6 @@ git push -f -q $target_repo_url_with_token master
 #调用百度API自动提交新增URL
 cd $workspace_path/$tmp_dir
 
-#先下载
-logger "download old sitemap.xml to tmp dir"
-curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
 #将sitemap.xml拷贝到tmp目录
 logger "copy new sitemap.xml to tmp dir"
 cp $workspace_path/$site_dir/public/sitemap.xml new-sitemap.xml
