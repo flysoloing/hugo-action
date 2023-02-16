@@ -14,6 +14,7 @@ FROM alpine:3.14
 RUN apk add --no-cache hugo \
     && apk add --no-cache git \
     && apk add --no-cache curl \
+    && apk add --no-cache grep \
     && apk add --no-cache libxml2-utils
 
 # 拷贝代码仓库里的entrypoint.sh到容器的/路径下
