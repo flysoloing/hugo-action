@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#set -euxo pipefail
 set -e
 
 #定义日志函数
@@ -202,6 +203,10 @@ pwd && ls -al
 cd $workspace_path/$target_dir
 pwd && ls -al
 
+#拷贝旧sitemap.xml到tmp目录
+logger "copy old sitemap.xml to tmp dir"
+cp sitemap.xml $workspace_path/$tmp_dir/old-sitemap.xml
+
 #检测是否包含CNAME文件，若包含，则需保留该文件
 cname_file="CNAME"
 dot_cname_file=".CNAME"
@@ -244,10 +249,10 @@ logger "copy the site public directory to target dir"
 cp -r . $workspace_path/$target_dir
 
 #提前把老的sitemap.xml下载到临时目录
-cd $workspace_path/$tmp_dir
-logger "download old sitemap.xml to tmp dir"
-curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
-pwd && ls -al
+#cd $workspace_path/$tmp_dir
+#logger "download old sitemap.xml to tmp dir"
+#curl -o old-sitemap.xml https://www.crudman.cn/sitemap.xml
+#pwd && ls -al
 
 #将target目录提交到GitHub
 cd $workspace_path/$target_dir
@@ -274,7 +279,7 @@ git push -f -q $target_repo_url_with_token master
 #调用百度API自动提交新增URL
 cd $workspace_path/$tmp_dir
 
-#将sitemap.xml拷贝到tmp目录
+#拷贝新sitemap.xml到tmp目录
 logger "copy new sitemap.xml to tmp dir"
 cp $workspace_path/$site_dir/public/sitemap.xml new-sitemap.xml
 
@@ -306,6 +311,9 @@ cat new-urls.txt
 #如果两个文件相同，在alpine下，可能grep执行会出错，原因是alpine默认是busybox的阉割版grep，需安装gnu版grep
 grep -vFf old-urls.txt new-urls.txt > urls.txt
 pwd && ls -al
+
+logger "show urls.txt"
+cat urls.txt
 
 #如果urls.txt文件为空，则不进行百度提交
 if [ ! -s urls.txt ]; then
